@@ -128,26 +128,3 @@ with center:
             unsafe_allow_html=True
         )
 
-
-
-
-
-
-
-
-
-import os, joblib, requests, pathlib, streamlit as st
-
-@st.cache_resource
-def load_pipeline():
-    model_path = pathlib.Path("models/Injury_Next_Season_model.joblib")
-    url = os.getenv("MODEL_URL")  # Streamlit Cloud → Secrets
-    model_path.parent.mkdir(parents=True, exist_ok=True)
-    if url and not model_path.exists():
-        r = requests.get(url, timeout=60)
-        r.raise_for_status()
-        model_path.write_bytes(r.content)
-    obj = joblib.load(model_path)
-    return obj["pipeline"] if isinstance(obj, dict) else obj
-
-pipe = load_pipeline()
